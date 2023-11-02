@@ -1,5 +1,6 @@
 const apiKey = 'fff54ec72d8341459e1213730230111';
-
+const ENTRY_LIMIT = 100;
+const FETCH_INTERVAL = 2000;
 const temperatureData = [];
 
 let myChart;
@@ -21,9 +22,13 @@ function updateTable() {
 function updateChart() {
   const temperatureChart = document.getElementById('temperature-chart');
 
-  const temperatures = temperatureData.slice(-100).map((data) => data.temperature);
+  const temperatures = temperatureData.slice(-ENTRY_LIMIT).map((data) => data.temperature);
 
-  if (!myChart) {
+  if (myChart) {
+    myChart.data.labels = Array.from({ length: temperatures.length }, (_, i) => i);
+    myChart.data.datasets[0].data = temperatures;
+    myChart.update();
+  } else {
     const ctx = temperatureChart.getContext('2d');
     myChart = new Chart(ctx, {
       type: 'line',
@@ -36,11 +41,17 @@ function updateChart() {
           borderWidth: 2,
         }],
       },
+      options: {
+        scales: {
+          x: {
+            type: 'linear',
+            position: 'bottom',
+            min: 0,
+            max: ENTRY_LIMIT - 1,
+          },
+        },
+      },
     });
-  } else {
-    myChart.data.labels = Array.from({ length: temperatures.length }, (_, i) => i);
-    myChart.data.datasets[0].data = temperatures;
-    myChart.update();
   }
 }
 
@@ -59,18 +70,18 @@ function fetchWeatherData() {
 
       temperatureData.push({ temperature, dateTime });
 
-      if (temperatureData.length > 100) {
-        temperatureData.shift();
+      if (temperatureData.length > ENTRY_LIMIT) {
+        temperatureData.shift(); 
       }
 
       updateTable();
       updateChart();
       document.getElementById('current-temperature').textContent = `${temperature}°C`;
-      setTimeout(fetchWeatherData, 3000); 
+      setTimeout(fetchWeatherData, FETCH_INTERVAL);
     })
     .catch((error) => {
       console.error('Error fetching weather data:', error);
-      setTimeout(fetchWeatherData, 3000);
+      setTimeout(fetchWeatherData, FETCH_INTERVAL);
     });
 }
 
