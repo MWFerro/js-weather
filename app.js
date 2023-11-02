@@ -1,16 +1,17 @@
-// Update your app.js with this code
 const apiKey = 'fff54ec72d8341459e1213730230111';
-const ENTRY_LIMIT = 50;
+const ENTRY_LIMIT = 100;
 const FETCH_INTERVAL = 2000;
 let temperatureData = [];
 let myChart;
 
 $(document).ready(function () {
   const locationDropdown = $('#location-dropdown');
+  let currentLocation = 'London'; 
 
   locationDropdown.change(function () {
     const selectedLocation = locationDropdown.val();
-    CURRENT_LOCATION = selectedLocation;
+    currentLocation = selectedLocation;
+    fetchWeatherData(currentLocation);
   });
 
   function updateTable() {
@@ -21,6 +22,7 @@ $(document).ready(function () {
       const data = temperatureData[i];
       const row = $('<tr>');
       row.append($('<td>').text(data.dateTime.toLocaleString()));
+      row.append($('<td>').text(data.location));
       row.append($('<td>').text(`${data.temperature}°C`));
       tableBody.append(row);
     }
@@ -61,14 +63,13 @@ $(document).ready(function () {
     }
   }
 
-  function fetchWeatherData() {
-    const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${CURRENT_LOCATION}`;
+  function fetchWeatherData(location) {
+    const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
     $.get(apiUrl)
       .done((data) => {
         const temperature = data.current.temp_c;
         const dateTime = new Date();
-
-        temperatureData.push({ temperature, dateTime });
+        temperatureData.push({ temperature, dateTime, location });
 
         if (temperatureData.length > ENTRY_LIMIT) {
           temperatureData.shift();
@@ -77,18 +78,22 @@ $(document).ready(function () {
         updateTable();
         updateChart();
 
-        $('#current-temperature').text(`${temperature}°C`);
-
-        setTimeout(fetchWeatherData, FETCH_INTERVAL);
+        $('#current-temperature').text(`Current Temperature for ${location}: ${temperature}°C`);
       })
       .fail((error) => {
         console.error('Error fetching weather data:', error);
-        setTimeout(fetchWeatherData, FETCH_INTERVAL);
       });
   }
 
-  let CURRENT_LOCATION = 'London';
-  locationDropdown.val(CURRENT_LOCATION);
+  locationDropdown.val(currentLocation);
+  fetchWeatherData(currentLocation);
 
-  fetchWeatherData();
+  function startRegularDataFetching() {
+    setTimeout(() => {
+      fetchWeatherData(currentLocation);
+      startRegularDataFetching();
+    }, FETCH_INTERVAL);
+  }
+
+  startRegularDataFetching();
 });
