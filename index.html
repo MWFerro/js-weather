@@ -5,12 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weather App</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <h1>Weather App</h1>
   <p>Current Temperature: <span id="current-temperature">Loading...</span></p>
 
+<select id="location-dropdown">
+  <option value="London">London</option>
+  <option value="Cairo">Cairo</option>
+  <option value="Kiev">Kiev</option>
+  <option value="New York">New York</option>
+  <option value="Tokyo">Tokyo</option>
+  <option value="Paris">Paris</option>
+</select>
+  
   <canvas id="temperature-chart"></canvas>
   
   <table>
@@ -23,7 +33,6 @@
     <tbody id="temperature-table">
     </tbody>
   </table>
-
 
   <script src="app.js"></script>
 </body>
