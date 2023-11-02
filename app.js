@@ -1,23 +1,29 @@
-const apiKey = 'fff54ec72d8341459e1213730230111';
+const apiKey = 'fff54ec72d8341459e1213730230111'; // only for this test - otherwise would use .env
 const ENTRY_LIMIT = 100;
-const FETCH_INTERVAL = 2000;
+const FETCH_INTERVAL = 10000;
+
+// initialize an array to store temperature data and a chart
 let temperatureData = [];
 let myChart;
 
 $(document).ready(function () {
+  // get a reference to the location dropdown element
   const locationDropdown = $('#location-dropdown');
-  let currentLocation = 'London'; 
+  let currentLocation = 'London'; // Initialize default location
 
+  // event handler for when a location is selected from the dropdown
   locationDropdown.change(function () {
     const selectedLocation = locationDropdown.val();
     currentLocation = selectedLocation;
     fetchWeatherData(currentLocation);
   });
 
+  // update the temperature data table
   function updateTable() {
     const tableBody = $('#temperature-table');
     tableBody.empty();
 
+    // create table rows
     for (let i = temperatureData.length - 1; i >= 0; i--) {
       const data = temperatureData[i];
       const row = $('<tr>');
@@ -28,6 +34,7 @@ $(document).ready(function () {
     }
   }
 
+  // progressively update the temperature chart
   function updateChart() {
     const temperatureChart = $('#temperature-chart')[0];
     const temperatures = temperatureData.slice(-ENTRY_LIMIT).map((data) => data.temperature);
@@ -63,6 +70,7 @@ $(document).ready(function () {
     }
   }
 
+  // fetch weather data from the API
   function fetchWeatherData(location) {
     const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
     $.get(apiUrl)
@@ -71,6 +79,7 @@ $(document).ready(function () {
         const dateTime = new Date();
         temperatureData.push({ temperature, dateTime, location });
 
+        // Remove the oldest data if it exceeds the entry limit
         if (temperatureData.length > ENTRY_LIMIT) {
           temperatureData.shift();
         }
@@ -78,6 +87,7 @@ $(document).ready(function () {
         updateTable();
         updateChart();
 
+        // update displayed current temperature
         $('#current-temperature').text(`Current Temperature for ${location}: ${temperature}°C`);
       })
       .fail((error) => {
@@ -88,6 +98,7 @@ $(document).ready(function () {
   locationDropdown.val(currentLocation);
   fetchWeatherData(currentLocation);
 
+  // start data fetching at a specified interval
   function startRegularDataFetching() {
     setTimeout(() => {
       fetchWeatherData(currentLocation);
@@ -95,5 +106,6 @@ $(document).ready(function () {
     }, FETCH_INTERVAL);
   }
 
+  // Start the regular data fetching after the initial fetch
   startRegularDataFetching();
 });

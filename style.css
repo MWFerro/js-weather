@@ -6,25 +6,40 @@ body, h1, p, table, th, td {
 body {
   font-family: Arial, sans-serif;
   background-color: #f2f2f2;
-  text-align: center;
-  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
+  min-height: 80vh; 
+  gap: 2rem; 
 }
 
 h1 {
   background-color: #3498db;
   color: #fff;
   padding: 10px;
+  margin-top: 2rem; 
+  margin-bottom: 2rem; 
 }
 
 p {
   font-size: 18px;
-  margin-top: 20px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  margin: 2rem auto;
+  padding: 20px;
 }
 
 table {
   border-collapse: collapse;
-  width: 80%;
-  margin: 20px auto;
+  width: 90%;
 }
 
 th, td {
@@ -38,15 +53,27 @@ th {
   color: #fff;
 }
 
+/* Striped rows in the table */
 tbody tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
 #temperature-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 80%;
   max-width: 600px;
-  height: 300px;
-  margin: 20px auto;
+  padding: 20px;
   border: 1px solid #3498db;
   background-color: #fff;
+  max-height: 600px;
+}
+
+@media (max-width: 768px) {
+  body {
+    min-height: 50vh; 
+    align-content: space-around;
+    margin: 2rem;
+  }
 }
