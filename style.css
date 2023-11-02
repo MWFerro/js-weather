@@ -1,0 +1,52 @@
+body, h1, p, table, th, td {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  text-align: center;
+  margin: 20px;
+}
+
+h1 {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px;
+}
+
+p {
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 80%;
+  margin: 20px auto;
+}
+
+th, td {
+  border: 1px solid #3498db;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #3498db;
+  color: #fff;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#temperature-chart {
+  width: 80%;
+  max-width: 600px;
+  height: 300px;
+  margin: 20px auto;
+  border: 1px solid #3498db;
+  background-color: #fff;
+}
